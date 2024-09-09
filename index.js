@@ -136,4 +136,15 @@ const averageRating = (genre) => {
     return sum / Number(ratings.length);
 }
 
-console.log(averageRating("Fantasy"));
+// console.log(averageRating("Fantasy"));
+
+const genresFilm = () => {
+    const genres = [];
+
+    mediaCollection.forEach(obj => {genres.includes(obj.genre) ? "" : genres.push(obj.genre)});
+
+    return genres
+}
+
+console.log(genresFilm());
+
