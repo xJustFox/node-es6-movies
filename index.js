@@ -43,6 +43,20 @@ const mediaCollection = [
         rating: 9.2,
         type: "serie tv",
         seasons: 8
+    },
+    {
+        title: "The Lord of the Rings: The Fellowship of the Ring",
+        year: 2001,
+        genre: "Fantasy",
+        rating: 8.8,
+        type: "film"
+    },
+    {
+        title: "Harry Potter and the Sorcerer's Stone",
+        year: 2001,
+        genre: "Fantasy",
+        rating: 7.6,
+        type: "film"
     }
 ];
 
@@ -111,7 +125,7 @@ class TvSerie extends Movie {
 // console.log(tvSerie.toString());
 
 const newMediaCollection = mediaCollection.map((obj) => {
-    if (obj.type === "film") {
+    if (obj.type.toLocaleLowerCase() === "film") {
         return new Movie(obj.title, obj.year, obj.genre, obj.rating, obj.type);
     }
     return new TvSerie(obj.title, obj.year, obj.genre, obj.rating, obj.type, obj.seasons);
@@ -146,5 +160,25 @@ const genresFilm = () => {
     return genres
 }
 
-console.log(genresFilm());
+// console.log(genresFilm());
+
+const filmListTexts = (genre) => {
+    const texts = [];
+    mediaCollection.forEach(obj => {
+        if (obj.genre === genre) {
+            if (obj.type.toLocaleLowerCase() === "film") {
+                const movie = new Movie(obj.title, obj.year, obj.genre, obj.rating, obj.type);
+                texts.push(movie.toString());
+            } else {
+                const tvSerie = new TvSerie(obj.title, obj.year, obj.genre, obj.rating, obj.type, obj.seasons);
+                texts.push(tvSerie.toString());
+            }
+        }
+    });
+
+    console.log(texts);
+    
+};
+
+console.log(filmListTexts("Fantasy"));
 
