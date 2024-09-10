@@ -1,64 +1,4 @@
-const mediaCollection = [
-    {
-        title: "Inception",
-        year: 2010,
-        genre: "Sci-Fi",
-        rating: 8.8,
-        type: "film"
-    },
-    {
-        title: "Breaking Bad",
-        year: 2008,
-        genre: "Crime",
-        rating: 9.5,
-        type: "serie tv",
-        seasons: 5
-    },
-    {
-        title: "The Dark Knight",
-        year: 2008,
-        genre: "Action",
-        rating: 9.0,
-        type: "film"
-    },
-    {
-        title: "Stranger Things",
-        year: 2016,
-        genre: "Fantasy",
-        rating: 8.7,
-        type: "serie tv",
-        seasons: 4
-    },
-    {
-        title: "Interstellar",
-        year: 2014,
-        genre: "Adventure",
-        rating: 8.6,
-        type: "film"
-    },
-    {
-        title: "Game of Thrones",
-        year: 2011,
-        genre: "Fantasy",
-        rating: 9.2,
-        type: "serie tv",
-        seasons: 8
-    },
-    {
-        title: "The Lord of the Rings: The Fellowship of the Ring",
-        year: 2001,
-        genre: "Fantasy",
-        rating: 8.8,
-        type: "film"
-    },
-    {
-        title: "Harry Potter and the Sorcerer's Stone",
-        year: 2001,
-        genre: "Fantasy",
-        rating: 7.6,
-        type: "film"
-    }
-];
+const mediaCollection = require('./db.js');
 
 class Movie {
     #title
@@ -66,6 +6,7 @@ class Movie {
     #genre
     #rating
     #type
+    #price = 3.99;
 
     constructor(title, year, genre, rating, type) {
         this.#title = title;
@@ -80,24 +21,28 @@ class Movie {
     }
 
     // Metodi getter per accedere alle proprietà private
-    getTitle() {
+    get title() {
         return this.#title;
     }
 
-    getYear() {
+    get year() {
         return this.#year;
     }
 
-    getGenre() {
+    get genre() {
         return this.#genre;
     }
 
-    getRating() {
+    get rating() {
         return this.#rating;
     }
 
-    getType() {
+    get type() {
         return this.#type;
+    }
+
+    get price() {
+        return this.#price
     }
 }
 
@@ -111,7 +56,11 @@ class TvSerie extends Movie {
     }
 
     toString() {
-        return `${this.getTitle()} è una ${this.getType()} di genere ${this.getGenre()}. La prima stagione è stata rilasciata nel ${this.getYear()} ed in totale sono state prodotte ${this.#seasons} stagioni. Ha un voto di ${this.getRating()}.`;
+        return `${this.title} è una ${this.type} di genere ${this.genre}. La prima stagione è stata rilasciata nel ${this.year} ed in totale sono state prodotte ${this.#seasons} stagioni. Ha un voto di ${this.rating}.`;
+    }
+
+    get seasons () {
+        return this.#seasons;
     }
 
 }
@@ -165,7 +114,7 @@ const genresFilm = () => {
 const filmListTexts = (genre) => {
     const texts = [];
     mediaCollection.forEach(obj => {
-        if (obj.genre === genre) {
+        if (obj.genre.toLowerCase() === genre.toLowerCase()) {
             if (obj.type.toLocaleLowerCase() === "film") {
                 const movie = new Movie(obj.title, obj.year, obj.genre, obj.rating, obj.type);
                 texts.push(movie.toString());
@@ -180,5 +129,67 @@ const filmListTexts = (genre) => {
     
 };
 
-console.log(filmListTexts("Fantasy"));
+// console.log(filmListTexts("Fantasy"));
+
+class Cart {
+    #cart = [];
+
+    addMedia(newMedia) {
+        this.#cart.push(newMedia);
+        console.log(`Hai aggiunto ${newMedia.title} al carrello!`);
+    }
+
+    removeMedia(mediaTitle) {
+        const newCart = this.#cart.filter((obj) =>  obj.title === mediaTitle);
+        this.#cart = newCart;
+
+        return `Hai totlo ${mediaTitle} dal carrello`;
+    }
+
+    totalPrice() {
+        return this.#cart.length * this.#cart[0].price;
+    }
+
+    viewCart() {
+        if (this.#cart.length > 0) {
+            console.log("Media nel carrello:");
+            this.#cart.forEach((media, index) => {
+                switch (media.type.toLowerCase()) {
+                    case "film":
+                        console.log(`${index + 1}. ${media.title} (${media.year}) ${media.type} - ${media.genre} - Rating: ${media.rating} - Price: ${media.price}`);
+                        break;
+                    case "serie tv":
+                        console.log(`${index + 1}. ${media.title} (${media.year}) ${media.type} - ${media.genre} - Seasones: ${media.seasons} - Rating: ${media.rating} - Price: ${media.price}`);
+                        break
+                    default:
+                        break;
+                }
+            });
+        } else {
+            console.log("Il carrello è vuoto.");
+        }
+    }
+}
+
+const media1 = new Movie("The Matrix", 1999, "Action", 8.7, "film")
+const media2 = new TvSerie("Game of Thrones", 2011, "Fantasy", 9.2, "serie tv", 8)
+
+const cart = new Cart();
+
+console.log(cart.addMedia(media1));
+console.log(cart.addMedia(media2));
+
+
+console.log(cart.viewCart());
+console.log(cart.totalPrice());
+
+console.log(cart.removeMedia("The Matrix"));
+
+console.log(cart.viewCart());
+console.log(cart.totalPrice());
+
+
+
+
+
 
