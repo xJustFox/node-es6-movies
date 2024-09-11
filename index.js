@@ -135,13 +135,15 @@ class Cart {
     #cart = [];
 
     addMedia(newMedia) {
+        if(this.#cart.find(media => media.title === media.title)){
+            return;
+        }
         this.#cart.push(newMedia);
         console.log(`Hai aggiunto ${newMedia.title} al carrello!`);
     }
 
     removeMedia(mediaTitle) {
-        const newCart = this.#cart.filter((obj) =>  obj.title === mediaTitle);
-        this.#cart = newCart;
+        this.#cart = this.#cart.filter((obj) =>  obj.title === mediaTitle);
 
         return `Hai totlo ${mediaTitle} dal carrello`;
     }
